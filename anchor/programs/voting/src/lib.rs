@@ -21,6 +21,16 @@ pub mod voting {
         ctx.accounts.poll_account.poll_voting_end = end_time;
         Ok(())
     }
+
+    pub fn initialize_candidate(ctx:Context<InitializeCandidate>,
+    _poll_id:u64,
+    candidate:String
+    ) ->Result <()>{
+        ctx.accounts.candidate_account.candidate_name=candidate;
+        ctx.accounts.candidate_account.candidate_votes=0;
+    
+        Ok(())
+    }
 }
 
 // Specifies what accounts are passed to a function and their constraints
@@ -38,6 +48,23 @@ pub struct InitializePoll<'info> {
     )]
     pub poll_account: Account<'info, PollAccount>,
     pub system_program: Program<'info, System>,
+}
+#[derive(Accounts)]
+#[instruction(poll_id:u64 , candidate:String)]
+pub struct InitializeCandidate<'info>{
+    #[account(mut)]
+    pub signer:Signer<'info>,
+    // no need to add init or init_if_needed since poll should already exists
+    pub poll_account:Account<'info ,PollAccount>,
+    #[account(
+        init ,
+        payer=signer,
+        space=8+CandidateAccount::INIT_SPACE,
+        seeds=[poll_id.to_le_bytes().as_ref() , candidate.as_ref()],
+        bump
+    )]
+    pub candidate_account:Account<'info ,CandidateAccount>,
+    pub system_program:Program<'info , System>,
 }
 
 // struct which will be stored on solana blockchain
