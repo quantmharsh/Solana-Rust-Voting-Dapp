@@ -13,15 +13,21 @@ import { Voting } from '../target/types/voting';
 const PUPPET_PROGRAM_ID = new PublicKey("FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwydeEfqS");
 
 describe('Create a system account', () => {
+  let context;
+  let provider;
+  let puppetProgram:any;
+  beforeAll(async()=>{
+ context = await startAnchor("", [{name: "voting", programId: PUPPET_PROGRAM_ID}], []);
+     provider = new BankrunProvider(context);
 
-  test("bankrun", async () => {
-    const context = await startAnchor("", [{name: "voting", programId: PUPPET_PROGRAM_ID}], []);
-    const provider = new BankrunProvider(context);
-
-    const puppetProgram = new Program<Voting>(
+     puppetProgram = new Program<Voting>(
       IDL,
       provider,
     );
+  })
+
+  test("bankrun", async () => {
+   
 
     const [pollAddress] = PublicKey.findProgramAddressSync(
       [Buffer.from("poll"), new anchor.BN(1).toArrayLike(Buffer, "le", 8)],
@@ -46,5 +52,7 @@ describe('Create a system account', () => {
     
 
   });
+
+  it( "Initialize Candidate" , async()=>{}) 
 
 });
