@@ -9,6 +9,7 @@ import { BN, Program } from "@coral-xyz/anchor";
 
 const IDL = require("../target/idl/voting.json");
 import { Voting } from '../target/types/voting';
+import { Anchor } from "lucide-react";
 
 const PUPPET_PROGRAM_ID = new PublicKey("FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwydeEfqS");
 
@@ -108,7 +109,33 @@ expect(smoothCandidate.candidateVotes.toNumber()).toBe(0);
 
   }) 
   test("Vote" , async()=>{
+      const pollId = new anchor.BN(1);
+    const candidateName = "Smooth";
+    const [candidateAddress] = PublicKey.findProgramAddressSync(
+      [pollId.toArrayLike(Buffer, "le", 8), Buffer.from(candidateName)],
+      puppetProgram.programId
+    );
 
+    const [pollAddress] = PublicKey.findProgramAddressSync(
+      [Buffer.from("poll"), pollId.toArrayLike(Buffer, "le", 8)],
+      puppetProgram.programId
+    );
+
+
+await puppetProgram.methods
+      .vote(pollId,candidateName).accounts({
+        signer: provider.wallet.publicKey,
+        pollAccount: pollAddress,
+        candidateAccount: candidateAddress,
+      }).rpc()
+         const [smoothAddress] = PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer, "le", 8) ,Buffer.from("Smooth")],
+      puppetProgram.programId
+    );
+    const smoothCandidate =await puppetProgram.account.candidateAccount.fetch(smoothAddress);
+    console.log(smoothCandidate);
+    expect(smoothCandidate.candidateName).toBe("Smooth");
+expect(smoothCandidate.candidateVotes.toNumber()).toBe(1);
   })
 
 });
