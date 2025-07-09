@@ -28,7 +28,15 @@ pub mod voting {
     ) ->Result <()>{
         ctx.accounts.candidate_account.candidate_name=candidate;
         ctx.accounts.candidate_account.candidate_votes=0;
+        let poll =&mut ctx.accounts.poll_account;
+        poll.poll_option_index+=1; 
     
+        Ok(())
+    }
+
+    pub fn vote(ctx:Context<Vote> , _poll_id:u64 , _candidate:String)-> Result<()>{
+        let candidate_account = &mut ctx.accounts.candidate_account;
+        candidate_account.candidate_votes+=1;
         Ok(())
     }
 }
@@ -66,6 +74,28 @@ pub struct InitializeCandidate<'info>{
     pub candidate_account:Account<'info ,CandidateAccount>,
     pub system_program:Program<'info , System>,
 }
+
+#[derive(Accounts)]
+#[instruction(poll_id:u64 , candidate:String)]
+pub struct Vote<'info>{
+    #[account(mut)]
+    pub signer:Signer<'info>,
+    #[account(
+        mut ,
+        seeds = [b"poll".as_ref(), poll_id.to_le_bytes().as_ref()],
+        bump
+    )]
+    pub poll_account:Account<'info, PollAccount>,
+    #[account(
+        mut,
+        seeds=[poll_id.to_le_bytes().as_ref() , candidate.as_ref()],
+        bump
+
+    )]
+    pub candidate_account:Account<'info , CandidateAccount>,
+
+}
+
 
 // struct which will be stored on solana blockchain
 #[account]

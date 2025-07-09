@@ -80,6 +80,7 @@ describe('Create a system account', () => {
 
     console.log(`Initialized candidate: ${candidateName}`);
   };
+  
 
   // Initialize both candidates
   await initCandidate("Smooth");
