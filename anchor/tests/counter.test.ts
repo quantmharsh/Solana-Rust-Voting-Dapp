@@ -5,6 +5,9 @@ import * as anchor from '@coral-xyz/anchor';
 import { BN, Program } from "@coral-xyz/anchor";
 
 //make sure to change anchor.toml contract name . 
+//whenever to Anchor build
+//copy the  programs/voting/target/deploy/voting.so
+//into  /tests/(create folder(fixtures)) .paste voting.so 
 
 
 const IDL = require("../target/idl/voting.json");
