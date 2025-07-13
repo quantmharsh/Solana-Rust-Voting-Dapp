@@ -1,16 +1,32 @@
-import {ActionGetResponse} from "@solana/actions"
+import {ActionGetResponse, ACTIONS_CORS_HEADERS} from "@solana/actions"
 
+
+export const OPTIONS=GET;
 export async  function GET (request:Request){
 
     const actionMetaData: ActionGetResponse={
 
-        icon :"https://www.google.com/imgres?q=peanut%20butter&imgurl=https%3A%2F%2Fwww.nuflowerfoods.com%2Fwp-content%2Fuploads%2F2024%2F09%2Fglobe2.jpg&imgrefurl=https%3A%2F%2Fwww.nuflowerfoods.com%2Fblogs%2Fpeanut-butter-around-the-world-global-variations%2F&docid=bHqFHXdVo9M84M&tbnid=Rd5ut6Mkb7_m8M&vet=12ahUKEwi-u4iI0LeOAxWKQPUHHX_bF2wQM3oECBsQAA..i&w=900&h=600&hcb=2&ved=2ahUKEwi-u4iI0LeOAxWKQPUHHX_bF2wQM3oECBsQAA" ,
+        icon :"https://img.freepik.com/free-photo/cashew-butter-dark-background_1150-45402.jpg?semt=ais_hybrid&w=740" ,
         title:"Vote for your favourite  type of peanut butter!",
         description:"Vote between crunchy and smooth peanut  butter!!",
-        label:"Vote"
+        label:"Vote now!",
+        links:{
+            actions:[
+                {
+                href:'/api/vote?candidate=crunchy',
+                label:'Vote Crunchy' ,
+                type:"post"
+            } ,
+                {
+                href:'/api/vote?candidate=smooth',
+                label:'Vote Smooth',
+                type:"post"
+            }
+        ]
+        }
 
     }
-    return Response.json(actionMetaData);
+    return Response.json(actionMetaData ,{headers:ACTIONS_CORS_HEADERS});
 
 }
 
