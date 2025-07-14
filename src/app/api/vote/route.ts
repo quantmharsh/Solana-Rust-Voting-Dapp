@@ -13,12 +13,12 @@ export async  function GET (request:Request){
         links:{
             actions:[
                 {
-                href:'/api/vote?candidate=crunchy',
+                href:'/api/vote?candidate=Crunchy',
                 label:'Vote Crunchy' ,
                 type:"post"
             } ,
                 {
-                href:'/api/vote?candidate=smooth',
+                href:'/api/vote?candidate=Smooth',
                 label:'Vote Smooth',
                 type:"post"
             }

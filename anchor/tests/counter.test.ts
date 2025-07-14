@@ -19,15 +19,17 @@ const PUPPET_PROGRAM_ID = new PublicKey("FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwyd
 describe('Create a system account', () => {
   let context;
   let provider;
-  let puppetProgram:any;
+  //changes for running our program . to config 
+  anchor.setProvider(anchor.AnchorProvider.env());
+  let puppetProgram= anchor.workspace.Voting as Program<Voting>;
   beforeAll(async()=>{
- context = await startAnchor("", [{name: "voting", programId: PUPPET_PROGRAM_ID}], []);
-     provider = new BankrunProvider(context);
+//  context = await startAnchor("", [{name: "voting", programId: PUPPET_PROGRAM_ID}], []);
+//      provider = new BankrunProvider(context);
 
-     puppetProgram = new Program<Voting>(
-      IDL,
-      provider,
-    );
+//      puppetProgram = new Program<Voting>(
+//       IDL,
+//       provider,
+//     );
   })
 
   test("bankrun", async () => {
