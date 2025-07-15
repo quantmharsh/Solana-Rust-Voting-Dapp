@@ -52,8 +52,8 @@ describe('Create a system account', () => {
     console.log(pollAccount);
     
     expect(pollAccount.pollName).toEqual("test-poll");
-     expect(pollAccount.pollDescription).toEqual("description");
-      expect(pollAccount.pollVotingStart.toNumber()).toBeLessThan(pollAccount.pollVotingEnd.toNumber());
+    expect(pollAccount.pollDescription).toEqual("description");
+    expect(pollAccount.pollVotingStart.toNumber()).toBeLessThan(pollAccount.pollVotingEnd.toNumber());
 
     
 

@@ -1,5 +1,7 @@
 import {ActionGetResponse, ACTIONS_CORS_HEADERS} from "@solana/actions"
-
+import * as anchor from '@coral-xyz/anchor';
+import { Voting } from "anchor/target/types/voting";
+import idl from '@/../anchor/target/idl/voting.json';
 
 export const OPTIONS=GET;
 export async  function GET (request:Request){
@@ -27,6 +29,21 @@ export async  function GET (request:Request){
 
     }
     return Response.json(actionMetaData ,{headers:ACTIONS_CORS_HEADERS});
+
+}
+
+export async function  POST (request:Request){
+
+
+    //create a connection with Solana local validator.
+    const connection = new anchor.web3.Connection("http://127.0.0.1:8899" , "confirmed");
+    /* Create a TypeScript interface to my Anchor voting program (with correct types), using this RPC connection, so I can easily build instructions, simulate or send transactions, and fetch accounts.*/
+    const program : anchor.Program<Voting>= new anchor.Program(idl as Voting , {connection});
+
+    
+
+    
+
 
 }
 
