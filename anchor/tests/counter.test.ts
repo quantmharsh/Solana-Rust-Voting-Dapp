@@ -14,22 +14,18 @@ const IDL = require("../target/idl/voting.json");
 import { Voting } from '../target/types/voting';
 import { Anchor } from "lucide-react";
 
-const PUPPET_PROGRAM_ID = new PublicKey("FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwydeEfqS");
+const PUPPET_PROGRAM_ID = new PublicKey("wYCpxJZHNXBZdST973UMJV1JmPVZ4gT8jaCVNFt5545");
 
 describe('Create a system account', () => {
   let context;
   let provider;
-  //changes for running our program . to config 
-  anchor.setProvider(anchor.AnchorProvider.env());
-  let puppetProgram= anchor.workspace.Voting as Program<Voting>;
-  beforeAll(async()=>{
-//  context = await startAnchor("", [{name: "voting", programId: PUPPET_PROGRAM_ID}], []);
-//      provider = new BankrunProvider(context);
-
-//      puppetProgram = new Program<Voting>(
-//       IDL,
-//       provider,
-//     );
+  let puppetProgram: Program<Voting>;
+  
+  beforeAll(async() => {
+    // Initialize the provider properly
+    provider = anchor.AnchorProvider.env();
+    anchor.setProvider(provider);
+    puppetProgram = anchor.workspace.Voting as Program<Voting>;
   })
 
   test("bankrun", async () => {
@@ -46,7 +42,11 @@ describe('Create a system account', () => {
         new anchor.BN(1759508293),
         "test-poll",
         "description",
-    ).rpc();     // .rpc to eexecute the function
+    ).accounts({
+      signer: provider.wallet.publicKey,
+      pollAccount: pollAddress,
+      systemProgram: anchor.web3.SystemProgram.programId,
+    }).rpc();     // .rpc to eexecute the function
 
     const pollAccount = await puppetProgram.account.pollAccount.fetch(pollAddress);
     console.log(pollAccount);
@@ -132,7 +132,8 @@ await puppetProgram.methods
         signer: provider.wallet.publicKey,
         pollAccount: pollAddress,
         candidateAccount: candidateAddress,
-      }).rpc()
+      }).rpc();
+      
          const [smoothAddress] = PublicKey.findProgramAddressSync(
       [new anchor.BN(1).toArrayLike(Buffer, "le", 8) ,Buffer.from("Smooth")],
       puppetProgram.programId

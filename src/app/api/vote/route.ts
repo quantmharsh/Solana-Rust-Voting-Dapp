@@ -1,8 +1,8 @@
-import {ActionGetResponse, ActionPostRequest, ACTIONS_CORS_HEADERS} from "@solana/actions"
+import {ActionGetResponse, ActionPostRequest, ACTIONS_CORS_HEADERS, createPostResponse} from "@solana/actions"
 import * as anchor from '@coral-xyz/anchor';
 import { Voting } from "anchor/target/types/voting";
 import idl from '@/../anchor/target/idl/voting.json';
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, Transaction } from "@solana/web3.js";
 
 export const OPTIONS=GET;
 export async  function GET (request:Request){
@@ -60,6 +60,26 @@ export async function  POST (request:Request){
             headers:ACTIONS_CORS_HEADERS
         })
     }
+
+    //get the instructions that we want to run 
+    const instruction  =await program.methods.vote( new anchor.BN(1) , "Smooth" , ).accounts({
+        signer:account ,
+    }).instruction();
+    
+    const  blockhashResponse = await connection.getLatestBlockhash();
+    const tx= new Transaction({
+        feePayer:account ,
+        blockhash:blockhashResponse.blockhash ,
+        lastValidBlockHeight:blockhashResponse.lastValidBlockHeight
+    }).add(instruction);
+
+    const response = await createPostResponse({
+        fields:{
+            transaction:tx ,
+            type:"transaction"
+        }
+    });
+    return Response.json(response,{headers: ACTIONS_CORS_HEADERS});
 
 
 
