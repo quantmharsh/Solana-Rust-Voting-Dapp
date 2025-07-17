@@ -1,5 +1,5 @@
 {
-  "address": "FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwydeEfqS",
+  "address": "wYCpxJZHNXBZdST973UMJV1JmPVZ4gT8jaCVNFt5545",
   "metadata": {
     "name": "voting",
     "version": "0.1.0",
@@ -26,7 +26,25 @@
           "signer": true
         },
         {
-          "name": "poll_account"
+          "name": "poll_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  108,
+                  108
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "poll_id"
+              }
+            ]
+          }
         },
         {
           "name": "candidate_account",

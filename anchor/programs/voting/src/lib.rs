@@ -1,7 +1,7 @@
 
 use anchor_lang::prelude::*;
 
-declare_id!("FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwydeEfqS");
+declare_id!("wYCpxJZHNXBZdST973UMJV1JmPVZ4gT8jaCVNFt5545");
 
 #[program]
 pub mod voting {
@@ -63,9 +63,14 @@ pub struct InitializeCandidate<'info>{
     #[account(mut)]
     pub signer:Signer<'info>,
     // no need to add init or init_if_needed since poll should already exists
+    #[account(
+        mut,
+        seeds = [b"poll".as_ref(), poll_id.to_le_bytes().as_ref()],
+        bump
+    )]
     pub poll_account:Account<'info ,PollAccount>,
     #[account(
-        init ,
+        init_if_needed,
         payer=signer,
         space=8+CandidateAccount::INIT_SPACE,
         seeds=[poll_id.to_le_bytes().as_ref() , candidate.as_ref()],

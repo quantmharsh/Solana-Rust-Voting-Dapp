@@ -40,10 +40,12 @@ export async function  POST (request:Request){
     const connection = new anchor.web3.Connection("http://127.0.0.1:8899" , "confirmed");
     /* Create a TypeScript interface to my Anchor voting program (with correct types), using this RPC connection, so I can easily build instructions, simulate or send transactions, and fetch accounts.*/
     const program : anchor.Program<Voting>= new anchor.Program(idl as Voting , {connection});
+    console.log("Got Program" , program);
 
 
     const url = new URL(request.url);
     const  vote = url.searchParams.get('candidate')as string;
+    console.log("Got candidate name" , vote);
 
     if(vote!=="Crunchy" && vote!="Smooth")
     {
@@ -54,6 +56,7 @@ export async function  POST (request:Request){
     let account: PublicKey;
     try {
         account = new PublicKey(body.account);
+        console.log("Account" , account);
     } catch (error) {
         return new Response("Invalid account provided" , {
             status:400 ,
@@ -62,23 +65,27 @@ export async function  POST (request:Request){
     }
 
     //get the instructions that we want to run 
-    const instruction  =await program.methods.vote( new anchor.BN(1) , "Smooth" , ).accounts({
+    const instruction  =await program.methods.vote( new anchor.BN(1) , vote, ).accounts({
         signer:account ,
     }).instruction();
+    console.log("Got Instructions" , instruction);
     
     const  blockhashResponse = await connection.getLatestBlockhash();
+    console.log("BlockHashResponse" , blockhashResponse);
     const tx= new Transaction({
         feePayer:account ,
         blockhash:blockhashResponse.blockhash ,
         lastValidBlockHeight:blockhashResponse.lastValidBlockHeight
     }).add(instruction);
 
+    console.log("Transaction created" , tx);
     const response = await createPostResponse({
         fields:{
             transaction:tx ,
-            type:"transaction"
+             type:"transaction"
         }
     });
+    console.log("Response that we got" , response);
     return Response.json(response,{headers: ACTIONS_CORS_HEADERS});
 
 
