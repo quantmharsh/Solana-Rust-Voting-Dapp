@@ -61,7 +61,7 @@ describe('Create a system account', () => {
     
 
   });
-
+// Need to work with initialize Candidate unable to do transaction through dialto
   test( "Initialize Candidate" , async()=>{
     console.log("Starting candidates initialization");
     const pollId = new anchor.BN(1);
