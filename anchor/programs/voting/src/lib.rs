@@ -1,13 +1,15 @@
 
 use anchor_lang::prelude::*;
-
+//Update declare id whenever re deploying the Smart Contract on solana TestNet or DevNet or MainNet
 declare_id!("wYCpxJZHNXBZdST973UMJV1JmPVZ4gT8jaCVNFt5545");
 
+//Voting Module  encapsulates all methods and structs required for voting 
 #[program]
 pub mod voting {
     use super::*;
     
     pub fn initialize_poll(
+        //ctx is a context used to tell which  Accounts to look for while  initializing poll
         ctx: Context<InitializePoll>,
         _poll_id: u64,
         start_time: u64,
